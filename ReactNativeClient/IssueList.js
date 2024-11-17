@@ -134,15 +134,53 @@ class IssueAdd extends React.Component {
   constructor() {
     super();
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.issueList = new IssueList();
     /****** Q3: Start Coding here. Create State to hold inputs******/
+    this.state = { issue: {
+      title: '',
+      status: 'New',
+      owner: '',
+      effort: null,
+      due: null
+    }}
     /****** Q3: Code Ends here. ******/
   }
 
   /****** Q3: Start Coding here. Add functions to hold/set state input based on changes in TextInput******/
+  setIssue(field, value) {
+    this.setState(prevState => ({
+      issue: {
+        ...prevState.issue,
+        [field]: value
+      }
+    }));
+  };
+  initState() {
+    this.setState({issue: {
+      title: '',
+      status: 'New',
+      owner: '',
+      effort: null,
+      due: null
+    }});
+  }
   /****** Q3: Code Ends here. ******/
 
-  handleSubmit() {
+  async handleSubmit() {
     /****** Q3: Start Coding here. Create an issue from state variables and call createIssue. Also, clear input field in front-end******/
+    const newIssue = this.state.issue;
+    console.log(newIssue);
+    // if (!newIssue.status || newIssue.status === '') {
+    //   newIssue.status = 'New';
+    // }
+    const data = await this.issueList.createIssue(newIssue);
+    this.props.loadData();
+    this.initState();
+    this.newTitleInput.clear();
+    this.newStatusInput.clear();
+    this.newOwnerInput.clear();
+    this.newEffortInput.clear();
+    this.newDueInput.clear();
     /****** Q3: Code Ends here. ******/
   }
 
@@ -150,6 +188,12 @@ class IssueAdd extends React.Component {
     return (
       <View>
         {/****** Q3: Start Coding here. Create TextInput field, populate state variables. Create a submit button, and on submit, trigger handleSubmit.*******/}
+        <TextInput ref={input => { this.newTitleInput = input }} placeholder='Issue Title' onChangeText={newTitle => this.setIssue('title', newTitle)} />
+        <TextInput ref={input => { this.newStatusInput = input }} placeholder='Issue Status' onChangeText={newStatus => this.setIssue('status', newStatus)} />
+        <TextInput ref={input => { this.newOwnerInput = input }} placeholder='Issue Owner' onChangeText={newOwner => this.setIssue('owner', newOwner)} />
+        <TextInput ref={input => { this.newEffortInput = input }} placeholder='Issue Effort' onChangeText={newEffort => this.setIssue('effort', newEffort)} />
+        <TextInput ref={input => { this.newDueInput = input }} placeholder='Issue Due' onChangeText={newDue => this.setIssue('due', newDue)} />
+        <Button onPress={this.handleSubmit} title='Add New Issue' />
         {/****** Q3: Code Ends here. ******/}
       </View>
     );
@@ -227,6 +271,7 @@ export default class IssueList extends React.Component {
     }`;
 
     const data = await graphQLFetch(query, { issue });
+    // console.log(data)
     if (data) {
       this.loadData();
     }
@@ -247,7 +292,7 @@ export default class IssueList extends React.Component {
 
 
         {/****** Q3: Start Coding here. ******/}
-        {/* <IssueAdd/> */}
+        <IssueAdd loadData={this.loadData.bind(this)}/>
         {/****** Q3: Code Ends here. ******/}
 
         {/****** Q4: Start Coding here. ******/}
