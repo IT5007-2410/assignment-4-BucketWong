@@ -211,7 +211,7 @@ export default class IssueList extends React.Component {
     return (
     <>
     {/****** Q1: Start Coding here. ******/}
-    {/* <IssueFilter/> */}
+    <IssueFilter/>
     {/****** Q1: Code ends here ******/}
 
 
