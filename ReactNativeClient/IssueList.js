@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
   text: { textAlign: 'center' },
   dataWrapper: { marginTop: -1 },
   row: { backgroundColor: '#E7E6E1', flexDirection: 'row', flexWrap: 'wrap' },
-  cell: {textAlign: 'center', borderWidth: 1, borderColor: '#ccc', flex: 1 }
+  cell: { textAlign: 'center', borderWidth: 1, borderColor: '#ccc', flex: 1 }
 });
 
 const width = [40, 80, 80, 80, 80, 80, 200];
@@ -136,13 +136,15 @@ class IssueAdd extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.issueList = new IssueList();
     /****** Q3: Start Coding here. Create State to hold inputs******/
-    this.state = { issue: {
-      title: '',
-      status: 'New',
-      owner: '',
-      effort: null,
-      due: null
-    }}
+    this.state = {
+      issue: {
+        title: '',
+        status: 'New',
+        owner: '',
+        effort: null,
+        due: null
+      }
+    }
     /****** Q3: Code Ends here. ******/
   }
 
@@ -156,13 +158,15 @@ class IssueAdd extends React.Component {
     }));
   };
   initState() {
-    this.setState({issue: {
-      title: '',
-      status: 'New',
-      owner: '',
-      effort: null,
-      due: null
-    }});
+    this.setState({
+      issue: {
+        title: '',
+        status: 'New',
+        owner: '',
+        effort: null,
+        due: null
+      }
+    });
   }
   /****** Q3: Code Ends here. ******/
 
@@ -241,7 +245,7 @@ class BlackList extends React.Component {
 export default class IssueList extends React.Component {
   constructor() {
     super();
-    this.state = { issues: [] };
+    this.state = { issues: [], selector: 1 };
     this.createIssue = this.createIssue.bind(this);
   }
 
@@ -277,29 +281,29 @@ export default class IssueList extends React.Component {
     }
   }
 
+  setSelector(value) {
+    this.setState({ selector: value });
+    // console.log(this.state.selector);
+  }
+
 
   render() {
     return (
       <>
-        {/****** Q1: Start Coding here. ******/}
-        <IssueFilter />
-        {/****** Q1: Code ends here ******/}
-
-
-        {/****** Q2: Start Coding here. ******/}
-        <IssueTable issues={this.state.issues} />
-        {/****** Q2: Code ends here ******/}
-
-
-        {/****** Q3: Start Coding here. ******/}
-        <IssueAdd loadData={this.loadData.bind(this)}/>
-        {/****** Q3: Code Ends here. ******/}
-
-        {/****** Q4: Start Coding here. ******/}
-        <BlackList />
-        {/****** Q4: Code Ends here. ******/}
+        <View>
+          <Button onPress={() => this.setSelector(1)} title='Issue Table' />
+          <Button onPress={() => this.setSelector(2)} title='Add Issue' />
+          <Button onPress={() => this.setSelector(3)} title='Blacklist' />
+        </View>
+        {this.state.selector === 1 ? (
+          <>
+            <IssueFilter />
+            <IssueTable issues={this.state.issues} />
+          </>
+        ) : null}
+        {this.state.selector === 2 ? <IssueAdd loadData={this.loadData.bind(this)} /> : null}
+        {this.state.selector === 3 ? <BlackList /> : null}
       </>
-
-    );
+    )
   }
 }
