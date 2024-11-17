@@ -23,7 +23,7 @@ import {
   async function graphQLFetch(query, variables = {}) {
     try {
         /****** Q4: Start Coding here. State the correct IP/port******/
-        const response = await fetch('http://192.168.10.122:3000/graphql', {
+        const response = await fetch('http://10.0.2.2:3000/graphql', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json'},
         body: JSON.stringify({ query, variables })
@@ -52,7 +52,7 @@ class IssueFilter extends React.Component {
       return (
         <>
         {/****** Q1: Start Coding here. ******/}
-
+          <Text>Placeholder for IssueFilter</Text>
         {/****** Q1: Code ends here ******/}
         </>
       );
@@ -134,13 +134,25 @@ class BlackList extends React.Component {
     {   super();
         this.handleSubmit = this.handleSubmit.bind(this);
         /****** Q4: Start Coding here. Create State to hold inputs******/
+        this.state = {name: ''};
         /****** Q4: Code Ends here. ******/
     }
     /****** Q4: Start Coding here. Add functions to hold/set state input based on changes in TextInput******/
+    setName(newname)
+    {
+      this.setState({name: newname});
+    }
     /****** Q4: Code Ends here. ******/
 
     async handleSubmit() {
     /****** Q4: Start Coding here. Create an issue from state variables and issue a query. Also, clear input field in front-end******/
+    const query = `mutation ($newname: String!){
+      addToBlacklist(nameInput: $newname)
+    }`;
+    const newname = this.state.name;
+    console.log(newname);
+    const data = await graphQLFetch(query, {newname});
+    this.newnameInput.clear();
     /****** Q4: Code Ends here. ******/
     }
 
@@ -148,6 +160,8 @@ class BlackList extends React.Component {
     return (
         <View>
         {/****** Q4: Start Coding here. Create TextInput field, populate state variables. Create a submit button, and on submit, trigger handleSubmit.*******/}
+          <TextInput ref={input => {this.newnameInput = input }} placeholder='Name to Blacklist' onChangeText={newname => this.setName(newname)}/>
+          <Button onPress={this.handleSubmit} title='Add to Blacklist'/>
         {/****** Q4: Code Ends here. ******/}
         </View>
     );
@@ -197,17 +211,21 @@ export default class IssueList extends React.Component {
     return (
     <>
     {/****** Q1: Start Coding here. ******/}
+    {/* <IssueFilter/> */}
     {/****** Q1: Code ends here ******/}
 
 
     {/****** Q2: Start Coding here. ******/}
+    {/* <IssueTable/> */}
     {/****** Q2: Code ends here ******/}
 
     
     {/****** Q3: Start Coding here. ******/}
+    {/* <IssueAdd/> */}
     {/****** Q3: Code Ends here. ******/}
 
     {/****** Q4: Start Coding here. ******/}
+    <BlackList/>
     {/****** Q4: Code Ends here. ******/}
     </>
       
